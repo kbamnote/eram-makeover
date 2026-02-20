@@ -44,7 +44,6 @@ const ProcessSection = () => {
         >
           {steps.map((step, i) => (
             <motion.div key={i} variants={cardVariants} className="group relative">
-              {/* Number Background: Mobile par size thoda chota kiya taaki overlap handle ho sake */}
               <span className="text-7xl md:text-8xl font-playfair italic text-white absolute -top-10 -left-2 md:-top-12 md:-left-4 z-0 group-hover:text-[#d4c3b3] transition-colors duration-500">
                 {step.num}
               </span>

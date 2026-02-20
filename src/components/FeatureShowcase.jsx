@@ -10,19 +10,17 @@ const FeatureShowcase = () => (
       
       {/* Left Image Section */}
       <motion.div 
-        initial={{ opacity: 0, x: -50 }} // Mobile par slide distance kam rakha hai taaki glitch na ho
+        initial={{ opacity: 0, x: -50 }} 
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1, ease: "easeOut" }}
         className="w-full md:flex-1 relative"
       >
-        {/* Mobile par image ki height 400px, desktop par 650px */}
         <img 
           src={bridalImg} 
           alt="Bridal Work" 
           className="w-full h-[400px] md:h-[650px] object-cover shadow-2xl relative z-10" 
         />
-        {/* Decorative border: Mobile par thoda chota kiya gaya hai */}
         <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 w-full h-full border-[8px] md:border-[12px] border-[#f3efea] -z-0"></div>
       </motion.div>
       
@@ -36,7 +34,6 @@ const FeatureShowcase = () => (
       >
         <div className="space-y-4">
           <h2 className="text-[10px] md:text-sm tracking-[0.4em] md:tracking-[0.5em] uppercase text-[#a89078] font-bold">The Gold Standard</h2>
-          {/* text-4xl mobile ke liye, md:text-6xl desktop ke liye */}
           <h3 className="text-4xl md:text-6xl font-playfair italic leading-tight text-[#2c2c2c]">Signature Artistry & Luxury Bridal Care</h3>
         </div>
         
@@ -44,7 +41,6 @@ const FeatureShowcase = () => (
           At Eram Makeover, we believe that every face tells a unique story. Our approach to bridal artistry isn't just about applying products; it's about a deep understanding of skin anatomy and color theory.
         </p>
 
-        {/* Feature Grid: Mobile par 1 column, sm screens se 2 columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-[#eee6de] pt-8 text-left">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.5 }}>
             <h4 className="font-bold text-xs uppercase tracking-widest mb-2 text-[#2c2c2c]">Long-Wear Finish</h4>

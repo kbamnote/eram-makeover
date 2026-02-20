@@ -25,7 +25,7 @@ const Packages = () => {
   ];
 
   return (
-    <div className="bg-[#fdfbf9] min-h-screen py-16 md:py-24 px-6 md:px-20 font-montserrat overflow-hidden">
+    <div className="bg-[#fdfbf9] py-16 md:py-24 px-6 md:px-20 font-montserrat">
       {/* Header */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
@@ -103,7 +103,7 @@ const Packages = () => {
         viewport={{ once: true }}
         className="mt-20 text-center max-w-2xl mx-auto border-t border-[#eee6de] pt-10"
       >
-        <p className="text-gray-400 italic text-[11px] md:text-sm leading-relaxed">
+        <p className="text-black-400 italic text-[11px] md:text-sm leading-relaxed">
           *Custom packages are available for group bookings, destination weddings, and multi-day events. 
           Please contact us for a personalized quote.
         </p>

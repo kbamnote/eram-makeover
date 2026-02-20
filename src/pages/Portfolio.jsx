@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Animation import
+import { motion } from 'framer-motion'; 
 import bridalImg from '../assets/bridal.jpg';
 import editorialImg from '../assets/editorial.png';
 import softImg from '../assets/soft.png';
@@ -35,7 +35,7 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="bg-[#fdfbf9] min-h-screen py-16 md:py-24 px-6 md:px-20 font-montserrat overflow-hidden">
+    <div className="bg-[#fdfbf9] py-16 md:py-24 px-6 md:px-20 font-montserrat">
       {/* Header Section */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
@@ -100,7 +100,7 @@ const Portfolio = () => {
         viewport={{ once: true }}
         className="text-center mt-20"
       >
-        <p className="text-gray-400 italic text-xs md:text-sm">Every face is a unique masterpiece.</p>
+        <p className="text-black-400 italic text-xs md:text-sm">Every face is a unique masterpiece.</p>
       </motion.div>
     </div>
   );

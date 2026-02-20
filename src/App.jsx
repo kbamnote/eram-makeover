@@ -10,19 +10,18 @@ import BookingInfo from './pages/BookingInfo.jsx';
 import CategoryPage from './pages/CategoryPage';
 import InquiryPage from './pages/InquiryPage';
 import Booking from './pages/Booking';
-
 import Footer from './components/Footer';
-import ScrollToTop from './components/ScrollToTop'; // Scroll logic import
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <Router>
-      {/* 1. ScrollToTop ko Router ke andar aur div ke upar rakha hai */}
       <ScrollToTop /> 
-
-      <div className="flex flex-col min-h-screen">
+    
+      <div className="flex flex-col w-full"> 
         <Navbar />
-        
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -34,9 +33,10 @@ function App() {
             <Route path="/portfolio/:categoryName" element={<CategoryPage />} />
             <Route path="/inquiry" element={<InquiryPage />} />
             <Route path="/booking" element={<Booking />} />
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
           </Routes>
         </main>
-
         <Footer />
       </div>
     </Router>

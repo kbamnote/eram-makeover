@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#f3efea] border-t border-[#eee6de] pt-16 pb-8 px-8 md:px-20 font-montserrat">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+    <footer className="bg-[#f3efea] border-t border-[#eee6de] pt-16 pb-8 px-8 lg:px-20 font-montserrat overflow-hidden">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
         
         {/* Brand Section */}
-        <div className="col-span-1 md:col-span-1">
+        <div className="col-span-1">
           <h2 className="font-playfair italic text-2xl text-[#2c2c2c] mb-4">Eram Makeover</h2>
           <p className="text-gray-500 text-sm leading-relaxed">
             Enhancing your natural beauty with a touch of elegance and modern artistry.
@@ -46,8 +46,12 @@ const Footer = () => {
         </div>
       </div>
 
+      <Link to="/admin-login" className="text-[10px] text-black-300 opacity-90 hover:opacity-100">
+        Admin Access
+      </Link>
+
       {/* Copyright */}
-      <div className="border-t border-[#eee6de] pt-8 text-center text-[10px] tracking-[0.2em] text-gray-400 uppercase">
+      <div className="border-t border-[#eee6de] pt-8 text-center text-[10px] tracking-[0.2em] text-black-400 uppercase">
         © 2026 Eram Makeover. Artistry. All Rights Reserved.
       </div>
     </footer>

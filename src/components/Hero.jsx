@@ -4,9 +4,9 @@ import heroImg from '../assets/hero-bg.png';
 
 export default function Hero() {
   return (
-    <section className="flex flex-col md:flex-row h-screen md:h-[calc(100vh-80px)] overflow-hidden">
+    <section className="flex flex-col md:flex-row min-h-0 w-full">
       {/* Left: Image Side */}
-      <div className="flex-1">
+      <div className="flex-1 overflow-hidden">
         <img 
           src={heroImg} 
           alt="Makeup Artistry" 
@@ -15,7 +15,7 @@ export default function Hero() {
       </div>
 
       {/* Right: Content Side */}
-      <div className="flex-1 bg-nude-bg flex flex-col justify-center px-8 md:px-20 relative">
+      <div className="flex-1 bg-[#fdfbf9] flex flex-col justify-center py-12 px-8 md:px-20 relative">
         <div className="relative z-10">
           <h1 className="font-montserrat text-5xl md:text-7xl font-bold leading-tight text-black mb-6">
             Makeup Services <br /> at Your Place

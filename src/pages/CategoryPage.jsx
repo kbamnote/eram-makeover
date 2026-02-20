@@ -22,7 +22,6 @@ const CategoryPage = () => {
     { id: 6, title: "Night Out", category: "party", img: nightImg },
   ];
 
-  // 3. Filter logic: URL ka naam aur data ka category match karein
   const filteredItems = allItems.filter(
     (item) => item.category === categoryName.toLowerCase()
   );

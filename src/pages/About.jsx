@@ -14,7 +14,7 @@ const About = () => {
   };
 
   return (
-    <div className="bg-[#f3efea] min-h-screen py-16 md:py-24 px-6 md:px-20 font-montserrat overflow-hidden">
+    <div className="bg-[#f3efea] py-16 md:py-24 px-6 md:px-20 font-montserrat">
       
       {/* Page Title */}
       <motion.div 
@@ -34,20 +34,18 @@ const About = () => {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1 }}
-        /* Changed max-width to 3xl to keep square images from becoming too giant */
+
         className="max-w-3xl mx-auto bg-white p-2 md:p-4 shadow-2xl mb-16 md:mb-24"
       >
         <div className="relative overflow-hidden bg-[#fdfbf9]">
           <img 
             src={aboutImg} 
             alt="Lead Makeup Artist" 
-            /* h-auto allows the frame to adapt to the image's natural shape */
             className="w-full h-auto object-contain block" 
           />
         </div>
       </motion.div>
 
-      {/* Philosophy & Story Grid - Stackable */}
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 mb-20 md:mb-32 text-center md:text-left">
         <motion.div 
           initial={{ opacity: 0, x: -30 }}
@@ -76,7 +74,7 @@ const About = () => {
 
       {/* Team Section - Responsive Grid (Static Version) */}
     <div className="max-w-6xl mx-auto mb-16 md:mb-24">
-      <h2 className="text-center text-[10px] tracking-[0.4em] uppercase text-gray-400 mb-12 md:mb-16">
+      <h2 className="text-center text-[10px] tracking-[0.4em] uppercase text-black-400 mb-12 md:mb-16">
         The Creative Minds
       </h2>
       
@@ -92,14 +90,12 @@ const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.2 }}
-            className="flex flex-col items-center" // 'group' class removed as hover isn't needed
+            className="flex flex-col items-center" 
           >
-            {/* Border Wrapper - Scaling animation removed */}
             <div className="w-40 h-40 md:w-48 md:h-48 rounded-full border border-[#d4c3b3] p-2 mb-6">
               <img 
                 src={member.img} 
                 alt={member.name} 
-                /* Grayscale and hover transition classes removed for a natural look */
                 className="w-full h-full rounded-full object-cover" 
               />
             </div>

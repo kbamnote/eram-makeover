@@ -3,10 +3,9 @@ import Hero from '../components/Hero';
 import FeatureShowcase from '../components/FeatureShowcase';
 import ProcessSection from '../components/ProcessSection';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Animation ke liye import
+import { motion } from 'framer-motion'; 
 
 const Home = () => {
-  // Animation Variants defined here for clean code
   const fadeInUp = {
     hidden: { opacity: 0, y: 60 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
@@ -21,8 +20,7 @@ const Home = () => {
   };
 
   return (
-    <div className="overflow-x-hidden">
-      {/* Section 1: Hero - Initial Fade In */}
+    <div>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -31,7 +29,7 @@ const Home = () => {
         <Hero />
       </motion.div>
 
-      {/* Section 2: Big Featured Component - Reveal on Scroll */}
+  
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -41,7 +39,6 @@ const Home = () => {
         <FeatureShowcase />
       </motion.div>
 
-      {/* Section 3: Statement Divider - Scale Effect */}
       <motion.section 
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
@@ -53,8 +50,6 @@ const Home = () => {
          <p className="text-xs tracking-[0.5em] uppercase text-gray-400">Transforming faces, empowering souls.</p>
       </motion.section>
 
-      {/* Section 4: Process Component - Staggered reveal is handled inside ProcessSection usually, 
-          but we apply a general fade here too */}
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -64,7 +59,7 @@ const Home = () => {
         <ProcessSection />
       </motion.div>
 
-      {/* Section: Expertise Detail - Slide in from sides */}
+      
       <section className="py-24 bg-white px-8 md:px-20 border-t border-[#eee6de]">
         <motion.div 
           variants={staggerContainer}
@@ -94,7 +89,6 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* Section 5: Final Call to Action - Zoom In Effect */}
       <motion.section 
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}

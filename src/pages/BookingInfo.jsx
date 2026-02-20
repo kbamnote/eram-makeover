@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // 1. Link ko import karein
+import { Link } from 'react-router-dom'; 
 
 const BookingInfo = () => {
   return (
@@ -24,7 +24,6 @@ const BookingInfo = () => {
             <p className="text-gray-600 text-sm leading-relaxed">For bridal bookings, we recommend a trial session 4-6 weeks before the wedding to perfect your look.</p>
           </section>
 
-          {/* 2. Button ko Link ke andar wrap karein aur to="/" set karein */}
           <Link to="/">
             <button className="w-full mt-6 py-4 bg-[#c4b3a3] text-white text-xs uppercase tracking-[0.3em] hover:bg-[#b3a292] transition-all">
               Back to Home
