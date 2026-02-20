@@ -154,6 +154,7 @@ const AdminDashboard = () => {
                     <button onClick={() => triggerAction(row, 'Decline')} className="text-red-700 hover:text-red-900 underline underline-offset-4">Decline</button>
                   </td>
                 </tr>
+                
               ))}
             </tbody>
           </table>
