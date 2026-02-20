@@ -97,7 +97,7 @@ const Home = () => {
         className="py-24 bg-white text-center"
       >
         <h2 className="text-3xl font-playfair italic mb-8">Ready to start your transformation?</h2>
-        <Link to="/booking-info">
+        <Link to="/booking">
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

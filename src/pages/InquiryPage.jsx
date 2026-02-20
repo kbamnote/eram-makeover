@@ -18,6 +18,7 @@ const InquiryPage = () => {
   });
   
   const [loading, setLoading] = useState(false);
+  const [showPopup, setShowPopup] = useState(false); // New Popup State
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,7 +36,7 @@ const InquiryPage = () => {
       });
 
       if (response.ok) {
-        alert("Inquiry submitted successfully!");
+        setShowPopup(true); // Show Popup instead of alert
         setFormData({ fullname: '', email: '', phonenumber: '', date: '', service: packageName, message: '', time: '10:30 AM' });
       } else {
         const errorData = await response.json();
@@ -50,7 +51,7 @@ const InquiryPage = () => {
   };
 
   return (
-    <div className="bg-[#fdfbf9] min-h-screen py-20 px-8 md:px-20 font-montserrat">
+    <div className="bg-[#fdfbf9] min-h-screen py-20 px-8 md:px-20 font-montserrat relative">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-sm tracking-[0.4em] uppercase text-gray-400 mb-4 font-bold">Reservation Inquiry</h2>
@@ -135,6 +136,32 @@ const InquiryPage = () => {
           </form>
         </div>
       </div>
+
+      {/* --- SUCCESS POP-UP (Matches Booking Theme) --- */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowPopup(false)}></div>
+          
+          <div className="relative bg-white p-8 lg:p-12 max-w-md w-full text-center shadow-2xl rounded-sm border-t-8 border-[#a89078] animate-in fade-in zoom-in duration-300">
+            <div className="w-20 h-20 bg-[#fdfbf9] rounded-full flex items-center justify-center mx-auto mb-6 border border-[#eee6de]">
+              <svg className="w-10 h-10 text-[#a89078]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-playfair italic text-black mb-4">Inquiry Sent!</h2>
+            <p className="text-gray-600 text-sm mb-8 leading-relaxed">
+              Thank you for reaching out! We have received your inquiry for <span className="font-bold text-black">{packageName}</span>.<br/><br/>
+              Our team will review your details and get back to you shortly to discuss your vision.
+            </p>
+            <button 
+              onClick={() => setShowPopup(false)}
+              className="w-full bg-black text-white py-4 font-bold uppercase tracking-widest text-[10px] hover:bg-[#a89078] transition-all"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

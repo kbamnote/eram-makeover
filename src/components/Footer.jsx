@@ -8,7 +8,11 @@ const Footer = () => {
         
         {/* Brand Section */}
         <div className="col-span-1">
-          <h2 className="font-playfair italic text-2xl text-[#2c2c2c] mb-4">Eram Makeover</h2>
+          <Link to="/" className="inline-block group">
+            <h2 className="font-playfair italic text-2xl text-[#2c2c2c] mb-4 transition-opacity group-hover:opacity-70">
+              Eram Makeover
+            </h2>
+          </Link>
           <p className="text-gray-500 text-sm leading-relaxed">
             Enhancing your natural beauty with a touch of elegance and modern artistry.
           </p>
@@ -50,7 +54,6 @@ const Footer = () => {
         Admin Access
       </Link>
 
-      {/* Copyright */}
       <div className="border-t border-[#eee6de] pt-8 text-center text-[10px] tracking-[0.2em] text-black-400 uppercase">
         © 2026 Eram Makeover. Artistry. All Rights Reserved.
       </div>

@@ -24,15 +24,24 @@ export default function Hero() {
             Professional artistry for everyday looks, weddings, and high-fashion events.
           </p>
           
-          <Link to="/booking-info">
-            <button className="border border-black px-10 py-4 text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all duration-300">
-              Book an Appointment
-            </button>
-          </Link>
-        </div>
+        <Link 
+          to="/booking-info" 
+          className="inline-flex items-center text-xs font-bold uppercase tracking-[0.2em] text-black border-b border-[#a89078] pb-1 hover:text-[#a89078] hover:border-black transition-all duration-300"
+        >
+          Booking Information
+          <svg 
+            className="w-3 h-3 ml-2 transform transition-transform group-hover:translate-x-1" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
         
         {/* Subtle Decorative Pattern */}
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:40px_40px]"></div>
+      </div>
       </div>
     </section>
   );
