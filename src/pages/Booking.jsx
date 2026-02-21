@@ -153,7 +153,7 @@ const Booking = () => {
             </div>
           </div>
 
-          <div className="mt-10 pt-6 border-t border-golden-800">
+          {/* <div className="mt-10 pt-6 border-t border-golden-800"> */}
             <div className="flex justify-between text-[10px] mb-2">
               <span className="text-white-500 uppercase">Selected Date:</span>
               <span className="text-[#d4c3b3]">{selectedDate ? selectedDate.substring(4) : "-"}</span>
@@ -170,7 +170,7 @@ const Booking = () => {
             >
               {loading ? "Processing..." : "Confirm Now"}
             </button>
-          </div>
+          {/* </div> */}
         </div>
       </div>
 

@@ -4,11 +4,8 @@ import emailjs from '@emailjs/browser';
 
 const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
-  const [notification, setNotification] = useState({ show: false, msg: '', type: '' });
-  
-  // Custom Modal State (Replacing browser alerts)
+  const [notification, setNotification] = useState({ show: false, msg: '' });
   const [actionConfig, setActionConfig] = useState({ isOpen: false, booking: null, actionType: '' });
-  
   const navigate = useNavigate();
 
   const API_URL = "https://erammakeover-backend-production.up.railway.app/api/users";
@@ -16,142 +13,151 @@ const AdminDashboard = () => {
   const TEMPLATE_ID = "template_n60w94j";
   const PUBLIC_KEY = "ARxT7sdroJbJh2VtV";
 
-  const showPopup = (msg, type = 'success') => {
-    setNotification({ show: true, msg, type });
-    setTimeout(() => setNotification({ show: false, msg: '', type: '' }), 4000);
-  };
-
   const loadData = async () => {
     try {
-      const response = await fetch(API_URL);
+      const response = await fetch(`${API_URL}?t=${Date.now()}`);
       const data = await response.json();
-      setBookings(Array.isArray(data) && data.length > 0 ? data : []);
+      if (Array.isArray(data)) {
+        const savedApprovals = JSON.parse(localStorage.getItem('eram_approvals') || '[]');
+        const mergedData = data.map(booking => {
+          const id = booking._id || booking.id;
+          if (savedApprovals.includes(id)) {
+            return { ...booking, status: 'Confirmed' };
+          }
+          return booking;
+        });
+        setBookings(mergedData);
+      }
     } catch (error) { console.error("Fetch Error:", error); }
   };
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    loadData();
+    window.addEventListener('focus', loadData);
+    return () => window.removeEventListener('focus', loadData);
+  }, []);
 
-  const sendEmailNotification = (booking, status) => {
+  const sendEmail = (booking, status) => {
     const templateParams = {
-      to_name: booking.name || booking.fullname,
+      to_name: booking.fullname || booking.name,
       to_email: booking.email,
-      service: booking.service || "Booking Request",
+      service: booking.service || "Booking",
       date: booking.date || "TBD",
+      time: booking.time || "TBD",
       status: status, 
     };
-    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
+      .catch((err) => console.error("Email Error:", err));
   };
 
-  // Open the Luxury Modal
-  const triggerAction = (booking, type) => {
-    setActionConfig({ isOpen: true, booking, actionType: type });
-  };
-
-  // Final Action after Luxury Modal Confirmation
   const handleFinalConfirm = async () => {
     const { booking, actionType } = actionConfig;
-    const id = booking.id || booking._id;
+    const id = booking._id || booking.id;
     setActionConfig({ isOpen: false, booking: null, actionType: '' });
 
-    try {
-      if (actionType === 'Approve') {
-        const response = await fetch(`${API_URL}/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'Confirmed' })
-        });
-        if (response.ok) {
-          setBookings(bookings.map(b => (b.id === id || b._id === id) ? { ...b, status: 'Confirmed' } : b));
-          sendEmailNotification(booking, 'Confirmed');
-          showPopup(`Booking Confirmed for ${booking.name || booking.fullname}`);
-        }
-      } else {
-        const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-        if (response.ok) {
-          sendEmailNotification(booking, 'Declined');
-          setBookings(bookings.filter(b => (b.id !== id && b._id !== id)));
-          showPopup("Booking removed successfully.", "error");
-        }
+    if (actionType === 'Approve') {
+      const savedApprovals = JSON.parse(localStorage.getItem('eram_approvals') || '[]');
+      if (!savedApprovals.includes(id)) {
+        savedApprovals.push(id);
+        localStorage.setItem('eram_approvals', JSON.stringify(savedApprovals));
       }
-    } catch (error) { showPopup("Network Error", "error"); }
+      setBookings(prev => prev.map(b => (b._id === id || b.id === id) ? { ...b, status: 'Confirmed' } : b));
+      sendEmail(booking, 'Confirmed');
+      setNotification({ show: true, msg: "Artistry Confirmed & Email Sent!" });
+    } else {
+      try {
+        const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          sendEmail(booking, 'Declined');
+          setBookings(prev => prev.filter(b => b._id !== id && b.id !== id));
+          setNotification({ show: true, msg: "Booking Removed Successfully" });
+        }
+      } catch (error) { console.error("Delete failed"); }
+    }
   };
 
+  const pendingCount = bookings.filter(b => b.status !== 'Confirmed').length;
+  const confirmedCount = bookings.filter(b => b.status === 'Confirmed').length;
+
   return (
-    <div className="flex min-h-screen bg-[#fdfbf9] font-montserrat relative overflow-x-hidden">
+    <div className="flex min-h-screen bg-[#fdfbf9] font-montserrat text-black">
       
-      {/* --- LUXURY CUSTOM MODAL --- */}
+      {notification.show && (
+        <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setNotification({show: false})}></div>
+          <div className="relative bg-white p-10 max-w-sm w-full text-center shadow-2xl border-t-8 border-[#a89078] animate-in zoom-in duration-300">
+            <h2 className="text-2xl font-playfair italic mb-4">Eram Update</h2>
+            <p className="text-gray-600 text-sm mb-8">{notification.msg}</p>
+            <button onClick={() => setNotification({show: false})} className="w-full bg-black text-white py-4 font-bold uppercase tracking-widest text-[10px]">Close</button>
+          </div>
+        </div>
+      )}
+
       {actionConfig.isOpen && (
         <div className="fixed inset-0 z-[10000] flex items-center justify-center p-6">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
-          <div className="relative bg-white w-full max-w-md border-t-[10px] border-black shadow-2xl p-10 text-center animate-in fade-in zoom-in duration-300">
-            <h2 className="font-playfair italic text-3xl text-black mb-2">Artistry Decision</h2>
-            <div className="w-12 h-[1px] bg-[#a89078] mx-auto mb-6"></div>
-            <p className="text-[11px] uppercase tracking-[0.2em] text-gray-500 mb-8">
-              Confirm <span className="text-black font-black">{actionConfig.actionType}</span> for <br/>
-              <span className="text-black font-black text-sm block mt-2">{actionConfig.booking?.name || actionConfig.booking?.fullname}</span>
-            </p>
+          <div className="relative bg-white w-full max-w-md border-t-[10px] border-black p-10 text-center shadow-2xl">
+            <h2 className="font-playfair italic text-3xl mb-4">Confirm Action</h2>
+            <p className="text-[11px] uppercase tracking-widest text-gray-400 mb-8">Proceed with {actionConfig.actionType}?</p>
             <div className="flex flex-col gap-3">
-              <button onClick={handleFinalConfirm} className="py-4 bg-black text-white text-[10px] uppercase font-black tracking-widest hover:bg-[#a89078] transition-all">
-                Confirm {actionConfig.actionType}
-              </button>
-              <button onClick={() => setActionConfig({ isOpen: false, booking: null, actionType: '' })} className="py-4 border border-gray-200 text-gray-400 text-[10px] uppercase font-black hover:text-black transition-all">
-                Cancel
-              </button>
+              <button onClick={handleFinalConfirm} className="py-4 bg-black text-white text-[10px] font-black uppercase tracking-widest">Confirm</button>
+              <button onClick={() => setActionConfig({isOpen: false})} className="py-4 border border-gray-200 text-gray-400 text-[10px] font-black uppercase tracking-widest">Cancel</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* --- FLOATING NOTIFICATION --- */}
-      {notification.show && (
-        <div className="fixed top-10 right-5 md:right-10 z-[10001] bg-black text-white p-5 border-l-4 border-[#a89078] shadow-2xl animate-in slide-in-from-right-full">
-          <p className="text-sm font-playfair italic">{notification.msg}</p>
-        </div>
-      )}
-
       {/* Sidebar */}
       <div className="w-64 bg-black text-white p-8 hidden lg:flex flex-col border-r border-gray-800">
-        <h2 className="font-playfair italic text-2xl mb-12 border-b border-gray-800 pb-4">Eram Admin</h2>
-        <button onClick={() => navigate('/admin-login')} className="text-left text-[11px] uppercase text-red-500 font-black">Sign Out</button>
+        <h2 className="font-playfair italic text-2xl mb-12 border-b border-gray-700 pb-4">Eram Admin</h2>
+        <div className="flex flex-col gap-6">
+            <button onClick={() => navigate('/admin-dashboard')} className="text-left text-[11px] uppercase text-[#a89078] tracking-widest font-black">Main Dashboard</button>
+            <button onClick={() => { localStorage.removeItem("isAdmin"); navigate('/admin-login'); }} className="text-left text-[11px] uppercase text-red-500 tracking-widest font-black">Sign Out</button>
+        </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 p-6 lg:p-12 overflow-y-auto">
         <header className="mb-12">
-          <h1 className="text-4xl font-playfair italic text-black">Control Panel</h1>
-          <p className="text-[11px] uppercase tracking-[0.2em] text-gray-700 mt-2 font-black">Manage Artist Schedule</p>
+          <h1 className="text-4xl font-playfair italic">Studio Manager</h1>
         </header>
 
-        {/* --- RESTORED TABLE WITH ALL ORIGINAL FIELDS --- */}
-        <div className="bg-white border-2 border-[#eee6de] shadow-md overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-[#f5f1ed] text-[10px] uppercase text-black border-b-2 border-[#eee6de]">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <div className="bg-white p-8 border border-[#eee6de] shadow-sm">
+            <p className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Pending Inquiries</p>
+            <h3 className="text-4xl font-bold text-[#a89078]">{pendingCount}</h3>
+          </div>
+          <div className="bg-white p-8 border border-[#eee6de] shadow-sm">
+            <p className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-2">Confirmed Sessions</p>
+            <h3 className="text-4xl font-bold text-black">{confirmedCount}</h3>
+          </div>
+        </div>
+
+        <div className="bg-white border border-[#eee6de] overflow-hidden shadow-sm">
+          <table className="w-full text-left">
+            <thead className="bg-[#fcfaf8] text-[10px] uppercase text-black border-b border-[#eee6de]">
               <tr>
-                <th className="p-5 font-black">Client</th>
-                <th className="p-5 font-black">Service</th>
-                <th className="p-5 font-black">Date & Time</th>
-                <th className="p-5 font-black">Status</th>
-                <th className="p-5 font-black text-center">Actions</th>
+                <th className="p-6">Client</th>
+                <th className="p-6">Service</th>
+                <th className="p-6">Date</th>
+                <th className="p-6">Time</th>
+                <th className="p-6 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="text-[13px] text-black">
-              {bookings.map((row, index) => (
-                <tr key={row._id || row.id || index} className="border-b border-[#eee6de] hover:bg-[#fcfaf8] transition font-medium">
-                  <td className="p-5 font-bold">{row.name || row.fullname}</td>
-                  <td className="p-5 text-gray-900 font-semibold">{row.service || "Booking Request"}</td>
-                  <td className="p-5 text-gray-800 font-semibold">{row.date || "TBD"} | {row.time || "TBD"}</td>
-                  <td className="p-5">
-                    <span className={`px-4 py-1.5 text-[10px] uppercase font-black rounded-full border ${
-                      row.status === 'Confirmed' ? 'bg-green-100 text-green-800 border-green-200' : 'bg-orange-100 text-orange-800 border-orange-200'
-                    }`}>
-                      {row.status || 'Pending'}
-                    </span>
-                  </td>
-                  <td className="p-5 text-center flex justify-center gap-6 font-black uppercase text-[12px] tracking-tighter">
-                    {row.status !== 'Confirmed' && (
-                      <button onClick={() => triggerAction(row, 'Approve')} className="text-green-700 hover:text-green-900 underline underline-offset-4">Approve</button>
+            <tbody className="text-[13px]">
+              {bookings.map((row) => (
+                <tr key={row._id || row.id} className="border-b border-black-50 hover:bg-[#fdfbf9]">
+                  <td className="p-6 font-bold uppercase">{row.fullname || row.name}</td>
+                  <td className="p-6 text-black-600">{row.service || "General"}</td>
+                  <td className="p-6 text-black-600">{row.date}</td>
+                  <td className="p-6 text-black-600">{row.time}</td>
+                  <td className="p-6 text-center space-x-6">
+                    {row.status === 'Confirmed' ? (
+                      <span className="text-green-600 font-black uppercase text-[10px] tracking-widest">Confirmed</span>
+                    ) : (
+                      <button onClick={() => setActionConfig({isOpen: true, booking: row, actionType: 'Approve'})} className="text-black underline uppercase text-[10px] font-black hover:text-[#a89078]">Approve</button>
                     )}
-                    <button onClick={() => triggerAction(row, 'Decline')} className="text-red-700 hover:text-red-900 underline underline-offset-4">Decline</button>
+                    <button onClick={() => setActionConfig({isOpen: true, booking: row, actionType: 'Decline'})} className="text-red-800 underline uppercase text-[10px] font-black">Decline</button>
                   </td>
                 </tr>
               ))}
